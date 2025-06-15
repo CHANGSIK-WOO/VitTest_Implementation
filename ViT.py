@@ -302,5 +302,5 @@ for epoch in tqdm(range(EPOCHS)): #loop 10 times
 plt.ioff()  # Interactive Mode Off
 plt.show()  # Fix last graph
 
-    
+
     
