@@ -160,7 +160,7 @@ class MultiHeadAttention(nn.Module):
         x = self.projection(mha)
         x = self.proj_drop(x)
 
-        return mha 
+        return x 
 
     
 class VisionTransformerBlock(nn.Module):
@@ -257,7 +257,8 @@ model = VisionTransformer(img_size = IMAGE_SIZE,
                           depth = DEPTH,
                           num_heads =  NUM_HEADS,
                           mlp_dim =  MLP_DIM,
-                          drop_rate = DROP_RATE).to(device) #to CUDA
+                          drop_rate = DROP_RATE).to(device)
+
 
 # Loss (Multi-Class Classification Loss : softmax)
 criterion = nn.CrossEntropyLoss()
@@ -265,10 +266,9 @@ criterion = nn.CrossEntropyLoss()
 # Ready to update all parameters learnable in model via Adam Optimizer
 optimizer = optim.Adam(params = model.parameters(), lr = LEARNING_RATE)
 
-plt.ion()  # Interactive mode ON
 train_accuracies, train_losses, test_accuracies = list(), list(), list()
 
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+
 for epoch in tqdm(range(EPOCHS)): #loop 10 times
     train_loss, train_acc = train(model = model, loader = train_dataloader, optimizer = optimizer, criterion = criterion)
     test_acc = evaluate(model = model, loader = test_dataloader)
@@ -278,32 +278,27 @@ for epoch in tqdm(range(EPOCHS)): #loop 10 times
 
     print(f"Epoch : {epoch} / {EPOCHS}, Train Loss : {train_loss:.4f}, Train Acc. : {100 * train_acc:.1f}%, Test Acc. : {100 * test_acc:.1f}%")
     
-    #clear and update plots
-    ax1.cla()
-    ax2.cla()
+# Accuracy plot
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+ax1.plot(range(1, EPOCHS + 1), train_accuracies, label="Train Acc")
+ax1.plot(range(1, EPOCHS + 1), test_accuracies, label="Test Acc")
+ax1.set_xlim([1, EPOCHS])
+ax1.set_xticks(range(1, EPOCHS + 1))
+ax1.set_title("Accuracy")
+ax1.set_xlabel("Epoch")
+ax1.set_ylabel("Accuracy")
+ax1.legend()
+ax1.grid(True)
 
-    # Accuracy plot
-    ax1.plot(train_accuracies, label="Train Acc")
-    ax1.plot(test_accuracies, label="Test Acc")
-    ax1.set_title("Accuracy")
-    ax1.set_xlabel("Epoch")
-    ax1.set_ylabel("Accuracy")
-    ax1.legend()
-    ax1.grid(True)
+# Loss plot
+ax2.plot(range(1, EPOCHS + 1), train_losses, label="Train Loss", color='red')
+ax2.set_xlim([1, EPOCHS])
+ax2.set_xticks(range(1, EPOCHS + 1))
+ax2.set_title("Loss")
+ax2.set_xlabel("Epoch")
+ax2.set_ylabel("Loss")
+ax2.legend()
+ax2.grid(True)
 
-    # Loss plot
-    ax2.plot(train_losses, label="Train Loss", color='red')
-    ax2.set_title("Loss")
-    ax2.set_xlabel("Epoch")
-    ax2.set_ylabel("Loss")
-    ax2.legend()
-    ax2.grid(True)
-
-    plt.suptitle(f"Epoch {epoch+1}/{EPOCHS}")
-    plt.pause(0.1)  
-
-plt.ioff()  # Interactive Mode Off
+plt.suptitle(f"Epoch {epoch+1}/{EPOCHS}")
 plt.show()  # Fix last graph
-
-
-    
