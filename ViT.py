@@ -326,6 +326,9 @@ def predict_and_plot_grid(model, dataset, classes, grid_size=3):
                 color = "r"
 
             axes[i, j].set_title(f"Truth : {classes[true_label]}\n, Predicted : {classes[predicted.item()]}", fontsize = 10, c = color)
+            axes[i, j].axis("off")
 
     plt.tight_layout()
     plt.show()
+            
+predict_and_plot_grid(model,train_datasets, train_datasets.classes, grid_size=3)   
