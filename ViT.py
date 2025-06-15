@@ -206,7 +206,8 @@ class VisionTransformer(nn.Module):
 
     def forward(self, x):
         x = self.patch_embed(x)
-        x = self.encoder(x)
+        for block in self.encoder:
+            x = block(x)
         x = self.norm(x)
         cls_token = x[:, 0] # == x[:, 0, :], (bs, embed_dim)
         x = self.head(cls_token) #  (bs, num_classes) 
