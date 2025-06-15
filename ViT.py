@@ -145,7 +145,7 @@ class MultiHeadAttention(nn.Module):
         
         qkv = self.qkv(x) # (bs, num_tokens + 1, dim *3) +1 means [CLS] token in 1st position of embedding for classification.
         qkv = qkv.reshape(bs, num_tokens, 3, self.num_heads, self.head_dim) # (bs, 257, 768 * 3) --> (bs, 257, 3, 12, 64)
-        qkv =  # (bs, 257, 3, 12, 64) --> (3, bs, 12, 257, 64)
+        # (bs, 257, 3, 12, 64) --> (3, bs, 12, 257, 64)
         qkv = qkv.permute(2, 0, 3, 1, 4)
         q, k, v = qkv[0], qkv[1], qkv[2]
 
