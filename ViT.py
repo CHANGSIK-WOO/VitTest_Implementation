@@ -230,7 +230,7 @@ def train(model, loader, optimizer, criterion):
         optimizer.step() # update parameter --> W = W - lr * W.grad
 
         total_loss += loss.item() * images.shape[0]
-        correct += (pred.argmax(1) == labels).sum().items()
+        correct += (pred.argmax(1) == labels).sum().item()
 
 
     return total_loss / len(loader.dataset), correct / len(loader.dataset)
