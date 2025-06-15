@@ -126,6 +126,7 @@ class MLP(nn.Module):
     
 class MultiHeadAttention(nn.Module):
     def __init__(self, embed_dim : int, num_heads : int, drop_rate : float, qkv_bias : bool = True):
+        super().__init__()
         self.embed_dim = embed_dim # input embedding dimension
         self.num_heads = num_heads # Multi Head Number
 
