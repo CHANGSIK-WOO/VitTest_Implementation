@@ -306,7 +306,7 @@ plt.show()  # Fix last graph
 
 def predict_and_plot_grid(model, dataset, classes, grid_size=3):
     model.eval()
-    fig, axes = plt.subplot(grid_size, grid_size, figsize=(9, 9))
+    fig, axes = plt.subplots(grid_size, grid_size, figsize=(9, 9))
     for i in range(grid_size):
         for j in range(grid_size):
             idx = random.randint(0, len(dataset)-1)
@@ -316,19 +316,16 @@ def predict_and_plot_grid(model, dataset, classes, grid_size=3):
                 output = model(input_tensor)
                 _, predicted = torch.max(output.data, 1)
 
-            img = img / 2 + 0.5
+            # Denormalize (for visualization)
+            img = img * 0.5 + 0.5  # Reverse Normalize if std=0.5, mean=0.5
             npimg = img.cpu().numpy()
             axes[i, j].imshow(np.transpose(npimg, (1, 2, 0)))
-            truth = classes[true_label] == classes[predicted.item()]
-            if truth :
-                color = "g"
-            else :
-                color = "r"
 
-            axes[i, j].set_title(f"Truth : {classes[true_label]}\n, Predicted : {classes[predicted.item()]}", fontsize = 10, c = color)
+            correct = classes[true_label] == classes[predicted.item()]
+            color = "g" if correct else "r"
+
+            axes[i, j].set_title(f"True: {classes[true_label]}\nPred: {classes[predicted.item()]}", fontsize=10, color=color)
             axes[i, j].axis("off")
 
     plt.tight_layout()
     plt.show()
-            
-predict_and_plot_grid(model,train_datasets, train_datasets.classes, grid_size=3)   
