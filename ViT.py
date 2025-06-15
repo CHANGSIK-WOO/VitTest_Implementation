@@ -238,6 +238,7 @@ def train(model, loader, optimizer, criterion):
 
 def evaluate(model, loader):
     model.eval() #change dropout, batchnorm condition to Eval Mode
+    correct = 0
     with torch.no_grad(): # no gradient calculation
         for images, labels in loader: # load batch
             images, labels = images.to(device), labels.to(device)
