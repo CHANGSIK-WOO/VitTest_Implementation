@@ -150,7 +150,7 @@ class MultiHeadAttention(nn.Module):
         qkv = qkv.permute(2, 0, 3, 1, 4)
         q, k, v = qkv[0], qkv[1], qkv[2]
 
-        attn_scores = q @ k.tranpose(-2, -1) * self.scale # (3, bs, 12, 257, 64) --> (bs, 12, 257, 257)
+        attn_scores = q @ k.transpose(-2, -1) * self.scale # (3, bs, 12, 257, 64) --> (bs, 12, 257, 257)
         attn_scores = attn_scores.softmax(dim=-1) # (bs, 12, 257, 257) --> (bs, 12, 257, 257)
         attn_scores = self.attn_drop(attn_scores)
 
