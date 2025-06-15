@@ -32,8 +32,8 @@ random.seed(42) # random module (ex) random.randint(0, 10)
 # 4. Setting Hyperparameters
 BATCH_SIZE = 128 # are optimized in multiple of 8.
 EPOCHS = 10
-LEARNING_RATE = 3e-4 # 0.003
-PATCH_SIZE = 2
+LEARNING_RATE = 1e-4 # 0.003
+PATCH_SIZE = 4
 NUM_CLASSES = 10
 IMAGE_SIZE = 32
 IN_CHANNELS = 3
