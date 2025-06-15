@@ -297,7 +297,7 @@ for epoch in tqdm(range(EPOCHS)): #loop 10 times
     ax2.grid(True)
 
     plt.suptitle(f"Epoch {epoch+1}/{EPOCHS}")
-    plt.pause(0.1)  # ? 업데이트 타이밍 조절
+    plt.pause(0.1)  
 
 plt.ioff()  # Interactive Mode Off
 plt.show()  # Fix last graph
