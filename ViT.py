@@ -32,16 +32,16 @@ random.seed(42) # random module (ex) random.randint(0, 10)
 # 4. Setting Hyperparameters
 BATCH_SIZE = 128 # are optimized in multiple of 8.
 EPOCHS = 10
-LEARNING_RATE = 3e-4 # 10**-3
-PATCH_SIZE = 4
+LEARNING_RATE = 3e-4 # 0.003
+PATCH_SIZE = 2
 NUM_CLASSES = 10
 IMAGE_SIZE = 32
 IN_CHANNELS = 3
-EMBED_DIM = 256
-NUM_HEADS = 8
+EMBED_DIM = 128
+NUM_HEADS = 4
 DEPTH = 6
-MLP_DIM = 512
-DROP_RATE = 0.1
+MLP_DIM = 256
+DROP_RATE = 0.2
 
 #CIFAR10 Classes
 classes = ("plane", "car", "bird", "cat", "deer", "dog", "frog", "horse", "ship", "truck")
@@ -276,7 +276,7 @@ for epoch in tqdm(range(EPOCHS)): #loop 10 times
     test_accuracies.append(test_acc)
     train_losses.append(train_loss)
 
-    print(f"Epoch : {epoch} / {EPOCHS}, Train Loss : {train_loss:.4f}, Train Acc. : {100 * train_acc:.1f}%, Test Acc. : {100 * test_acc:.1f}%")
+    print(f"Epoch : {epoch+1} / {EPOCHS}, Train Loss : {train_loss:.4f}, Train Acc. : {100 * train_acc:.1f}%, Test Acc. : {100 * test_acc:.1f}%")
     
 # Accuracy plot
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
@@ -302,3 +302,30 @@ ax2.grid(True)
 
 plt.suptitle(f"Epoch {epoch+1}/{EPOCHS}")
 plt.show()  # Fix last graph
+
+
+def predict_and_plot_grid(model, dataset, classes, grid_size=3):
+    model.eval()
+    fig, axes = plt.subplot(grid_size, grid_size, figsize=(9, 9))
+    for i in range(grid_size):
+        for j in range(grid_size):
+            idx = random.randint(0, len(dataset)-1)
+            img, true_label = dataset[idx]
+            input_tensor = img.unsqueeze(dim=0).to(device)
+            with torch.no_grad():
+                output = model(input_tensor)
+                _, predicted = torch.max(output.data, 1)
+
+            img = img / 2 + 0.5
+            npimg = img.cpu().numpy()
+            axes[i, j].imshow(np.transpose(npimg, (1, 2, 0)))
+            truth = classes[true_label] == classes[predicted.item()]
+            if truth :
+                color = "g"
+            else :
+                color = "r"
+
+            axes[i, j].set_title(f"Truth : {classes[true_label]}\n, Predicted : {classes[predicted.item()]}", fontsize = 10, c = color)
+
+    plt.tight_layout()
+    plt.show()
